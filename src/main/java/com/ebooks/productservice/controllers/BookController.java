@@ -4,7 +4,6 @@ import com.ebooks.productservice.dtos.BookRequestDto;
 import com.ebooks.productservice.dtos.BookResponseDto;
 import com.ebooks.productservice.services.BookService;
 import jakarta.validation.Valid;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
-@WebMvcTest(BookController.class)
 public class BookController {
 
     private final BookService bookService;
@@ -28,7 +25,6 @@ public class BookController {
     public BookController(BookService bookService){
         this.bookService = bookService;
     }
-
     @PostMapping("/create")
     public ResponseEntity<BookResponseDto> createBook(@Valid @RequestBody BookRequestDto request) {
         BookResponseDto bookResponseDto = bookService.createBook(request);
@@ -55,5 +51,11 @@ public class BookController {
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/cache/clear")
+    public ResponseEntity<String> clearCache() {
+        bookService.clearAllBooksCache();
+        return ResponseEntity.ok("Books cache cleared.");
     }
 }

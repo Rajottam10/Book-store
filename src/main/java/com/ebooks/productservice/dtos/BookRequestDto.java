@@ -1,5 +1,6 @@
 package com.ebooks.productservice.dtos;
 
+import com.ebooks.productservice.validations.FirstLetterValidation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -10,13 +11,14 @@ import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 public class BookRequestDto {
-    @NotBlank
+    @NotBlank(message = "title shouldn't be null or empty")
     private String title;
+    @FirstLetterValidation
     private String author;
     @Size(min = 3, max = 90)
     private String description;
     private BigDecimal price;
-    @NotNull
+    @NotNull(message = "stock shouldn't be null")
     @Positive
     private Integer stock;
 

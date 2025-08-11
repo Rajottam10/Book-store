@@ -30,7 +30,6 @@ public class BookDtoMapper {
         book.setDescription(dto.getDescription());
         book.setPrice(dto.getPrice());
         book.setStock(dto.getStock());
-        // createdAt will be set in service layer
         return book;
     }
 
@@ -42,7 +41,6 @@ public class BookDtoMapper {
         response.setDescription(book.getDescription());
         response.setPrice(book.getPrice());
         response.setStock(book.getStock());
-        response.setCreatedAt(book.getCreatedAt());
         return response;
     }
 

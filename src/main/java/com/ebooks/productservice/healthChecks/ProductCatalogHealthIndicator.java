@@ -1,11 +1,18 @@
 package com.ebooks.productservice.healthChecks;
 
+import com.ebooks.productservice.repositories.BookRepository;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductCatalogHealthIndicator implements HealthIndicator {
+    private BookRepository bookRepository;
+
+    public ProductCatalogHealthIndicator(BookRepository bookRepository){
+        this.bookRepository = bookRepository;
+    }
+
     @Override
     public Health getHealth(boolean includeDetails) {
         return HealthIndicator.super.getHealth(includeDetails);
@@ -23,7 +30,12 @@ public class ProductCatalogHealthIndicator implements HealthIndicator {
     }
 
     public boolean checkCatalogStatus(){
-        return true;
+        try{
+            bookRepository.count();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
 

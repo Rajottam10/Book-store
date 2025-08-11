@@ -11,4 +11,5 @@ public interface BookService {
     List<BookResponseDto> getAllBooks();
     BookResponseDto updateBook(Long id, BookRequestDto bookDReq);
     void deleteBook(Long id);
+    void clearAllBooksCache();
 }
