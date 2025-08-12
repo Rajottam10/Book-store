@@ -98,4 +98,14 @@ public class BookServiceImpl implements BookService {
             throw new BookAlreadyExistsException("The book with the title "+bookReq.getTitle()+" already exists.");
         }
     }
+
+    public void reduceBook(Long bookId, int quantity){
+        var book = bookRepository.findById(bookId).orElseThrow(()->
+                new BookNotFoundException("The book with the id "+bookId+" wasn't found."));
+        if(book.getStock() < quantity){
+            throw new RuntimeException("Insufficient stock.");
+        }
+        book.setStock(book.getStock() - quantity);
+        bookRepository.save(book);
+    }
 }
