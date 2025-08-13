@@ -10,6 +10,7 @@ import com.ebooks.productservice.repositories.BookRepository;
 import com.ebooks.productservice.services.BookService;
 import com.ebooks.productservice.services.mapper.BookDtoMapper;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookDtoMapper bookMapper;
@@ -45,7 +47,7 @@ public class BookServiceImpl implements BookService {
     @Cacheable(value = "books", key = "#id")
     public BookResponseDto getBookById(Long id) {
         simulateSlowService();
-        System.out.println("Fetching from DB for ID: " + id);
+        log.info("Fetching from DB for ID: " + id);
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id));
         producerService.sendMsgToTopic(bookMapper.toResponse(book));
@@ -82,12 +84,15 @@ public class BookServiceImpl implements BookService {
     }
 
     @CacheEvict(value = "books", allEntries = true)
-    public void clearAllBooksCache(){}
+    public void clearAllBooksCache(){
+        log.info("Clears the book from the cache.");
+    }
 
     private void simulateSlowService(){
         try {
             Thread.sleep(3000L);
         }catch (InterruptedException e){
+            log.error("Illegal state issue.");
             throw new IllegalStateException(e);
         }
     }
