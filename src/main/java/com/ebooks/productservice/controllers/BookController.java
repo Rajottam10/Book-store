@@ -58,4 +58,9 @@ public class BookController {
         bookService.clearAllBooksCache();
         return ResponseEntity.ok("Books cache cleared.");
     }
+
+    @GetMapping("/trace")
+    public String trace(){
+        return "Tracing success!";
+    }
 }
